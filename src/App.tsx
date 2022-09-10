@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {DependencyList, useEffect, useState} from 'react'
 import './App.css';
+import axios from "axios"
 
-function App() {
+
+
+export const App = () => {
+  const [allPokemon, setAllPokemon] = useState<any[]>([])
+
+  useAsyncEffect(async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/pokemon')
+      setAllPokemon(response.data)
+    } catch (e: unknown) {
+      console.error('unable to fetch pokemon', e)
+    }
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <div className="App">
+        {allPokemon.map((pokemon: any, index: number) => {
+          return(
+            <>
+              <label>{pokemon.name}</label>
+              <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`} alt={''}/>
+            </>
+          )
+        })}
+      </div>
+    </React.Fragment>
   );
 }
 
-export default App;
+function useAsyncEffect <T>(fun: () => Promise<T>, deps: DependencyList) {
+  useEffect(() => { fun() }, deps)
+}
