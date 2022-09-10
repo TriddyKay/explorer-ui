@@ -1,8 +1,7 @@
-import React, {DependencyList, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import './App.css';
 import axios from "axios"
-
-
+import { useAsyncEffect } from './hooks/customHooks';
 
 export const App = () => {
   const [allPokemon, setAllPokemon] = useState<any[]>([])
@@ -17,21 +16,19 @@ export const App = () => {
   }, [])
 
   return (
-    <React.Fragment>
-      <div className="App">
+    <div className="container mx-auto">
+      <div className="grid grid-cols-8 gap-4">
         {allPokemon.map((pokemon: any, index: number) => {
-          return(
-            <>
-              <label>{pokemon.name}</label>
-              <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`} alt={''}/>
-            </>
+          return (
+            <div>
+              <button className="hover:bg-gray-100 py-2 px-4 border border-gray-400 rounded shadow">
+                <h1 className="text-1xl">{pokemon.name}</h1>
+                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`} alt={''}/>
+              </button>
+            </div>
           )
         })}
       </div>
-    </React.Fragment>
+    </div>
   );
-}
-
-function useAsyncEffect <T>(fun: () => Promise<T>, deps: DependencyList) {
-  useEffect(() => { fun() }, deps)
 }
